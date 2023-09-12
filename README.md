@@ -1,1 +1,1 @@
-# spCoinMoralis
+# Dex Starter Repo (Moralis Blueprint)
