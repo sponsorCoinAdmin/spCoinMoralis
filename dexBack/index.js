@@ -11,23 +11,26 @@ app.use(express.json());
 app.get("/tokenPrice", async (req, res) => {
 
   const {query} = req;
+  const usdPrices = {}
+  let respStatus = 200;
 
   const responseOne = await Moralis.EvmApi.token.getTokenPrice({
-    address: query.addressOne
-  })
+    address: query.addressOne})
+      .then((rest) =>{ usdPrices.tokenOne = rest.raw.usdPrice;})
+        .catch((err) =>{ usdPrices.tokenOneErrMsg = "TokenOne ERROR:" + err;
+        respStatus = 401})
 
   const responseTwo = await Moralis.EvmApi.token.getTokenPrice({
-    address: query.addressTwo
-  })
+    address: query.addressTwo})
+      .then((rest) =>{ usdPrices.tokenTwo = rest.raw.usdPrice; })
+        .catch((err) =>{ usdPrices.tokenTwoErrMsg = "TokenTwo ERROR:" + err;
+        respStatus = 401})
 
-  const usdPrices = {
-    tokenOne: responseOne.raw.usdPrice,
-    tokenTwo: responseTwo.raw.usdPrice,
-    ratio: responseOne.raw.usdPrice/responseTwo.raw.usdPrice
-  }
-  
+  usdPrices.status = respStatus;
+  if (respStatus === 200)
+    usdPrices.ratio = usdPrices.tokenOne/usdPrices.tokenTwo
 
-  return res.status(200).json(usdPrices);
+  return res.status(respStatus).json(usdPrices);
 });
 
 Moralis.start({

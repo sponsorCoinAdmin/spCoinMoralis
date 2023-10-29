@@ -5,29 +5,24 @@ import {
   DownOutlined,
   SettingOutlined,
 } from "@ant-design/icons";
-import tokenEthList from "../tokenEthList.json";
-import tokenPolyList from "../tokenPolyList.json";
+import tokenList from "../tokenList.json";
 import axios from "axios";
 import { useSendTransaction, useWaitForTransaction } from "wagmi";
 
 
 function Swap(props) {
-  let tokenList = tokenEthList;
-  // let { tokenList, setTokenList } = useState(tokenEthList);
-  // let { address, isConnected } = props;
-  // alert(JSON.stringify(tokenList,null,2))
-  let { address, isConnected } = props;
-  let [messageApi, contextHolder] = message.useMessage();
-  let [slippage, setSlippage] = useState(2.5);
-  let [tokenOneAmount, setTokenOneAmount] = useState(null);
-  let [tokenTwoAmount, setTokenTwoAmount] = useState(null);
-  let [tokenOne, setTokenOne] = useState(tokenList[0]);
-  let [tokenTwo, setTokenTwo] = useState(tokenList[1]);
-  let [isOpen, setIsOpen] = useState(false);
-  let [changeToken, setChangeToken] = useState(1);
-  let [prices, setPrices] = useState(null);
-  let [txDetails, setTxDetails] = useState({
-    to: null,
+  const { address, isConnected } = props;
+  const [messageApi, contextHolder] = message.useMessage();
+  const [slippage, setSlippage] = useState(2.5);
+  const [tokenOneAmount, setTokenOneAmount] = useState(null);
+  const [tokenTwoAmount, setTokenTwoAmount] = useState(null);
+  const [tokenOne, setTokenOne] = useState(tokenList[0]);
+  const [tokenTwo, setTokenTwo] = useState(tokenList[1]);
+  const [isOpen, setIsOpen] = useState(false);
+  const [changeToken, setChangeToken] = useState(1);
+  const [prices, setPrices] = useState(null);
+  const [txDetails, setTxDetails] = useState({
+    to:null,
     data: null,
     value: null,
   }); 
@@ -44,10 +39,6 @@ function Swap(props) {
   const { isLoading, isSuccess } = useWaitForTransaction({
     hash: data?.hash,
   })
-
-  function changeNetwork(e) {
-    // setTokenList(e.target.value);
-  }
 
   function handleSlippageChange(e) {
     setSlippage(e.target.value);
@@ -79,7 +70,6 @@ function Swap(props) {
   }
 
   function modifyToken(i){
-    // console.log(`modifyToken(${i})`)
     setPrices(null);
     setTokenOneAmount(null);
     setTokenTwoAmount(null);
@@ -95,43 +85,19 @@ function Swap(props) {
 
   async function fetchPrices(one, two){
 
-    let status
-    await axios.get(`http://localhost:3001/tokenPrice`, {
+      const res = await axios.get(`http://localhost:3001/tokenPrice`, {
         params: {addressOne: one, addressTwo: two}
-      }).then((res) => {
-          let msg = `{ SUCCESS Request received!:, ${res} }`
-          alert(msg)
-          status = res.status
-          console.log(msg) 
-          setPrices(res.data)
-      }).catch((err) => {
-          let msg = `{ ERROR:, ${err} }`
-          alert(msg)
-          console.log(msg);
-          throw err
       })
 
-      // alert(JSON.log(res.data.tx, null, 2))
-      // alert(res.data, null, 2)
-      // let data = {
-      //   "tokenOne": 1.003902687388057,
-      //   "tokenTwo": 10.880057462749933,
-      //   "ratio": 0.09226998026665943
-      // }
-      // alert(JSON.stringify(data));
-
-      // let jsonOBJ = `fetchPrices(${one}, ${two}), ${JSON.stringify(res,null,2)}`
-      // alert(jsonOBJ);
-      // console.log(jsonOBJ);
-      // alert(status)
-      // setPrices(data)
+      
+      setPrices(res.data)
   }
 
   async function fetchDexSwap(){
 
     const allowance = await axios.get(`https://api.1inch.io/v5.0/1/approve/allowance?tokenAddress=${tokenOne.address}&walletAddress=${address}`)
   
-    if(allowance.data.allowance === "0") {
+    if(allowance.data.allowance === "0"){
 
       const approve = await axios.get(`https://api.1inch.io/v5.0/1/approve/transaction?tokenAddress=${tokenOne.address}`)
 
@@ -195,6 +161,8 @@ function Swap(props) {
         duration: 1.50,
       })
     }
+
+
   },[isSuccess])
 
 
@@ -240,7 +208,7 @@ function Swap(props) {
       </Modal>
       <div className="tradeBox">
         <div className="tradeBoxHeader">
-          <h4 className="center">Sponsor Coin Exchange</h4>
+          <h4>Swap</h4>
           <Popover
             content={settings}
             title="Settings"
