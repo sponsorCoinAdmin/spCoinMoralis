@@ -99,32 +99,19 @@ function Swap(props) {
     await axios.get(`http://localhost:3001/tokenPrice`, {
         params: {addressOne: one, addressTwo: two}
       }).then((res) => {
-          let msg = `{ SUCCESS Request received!:, ${res} }`
-          alert(msg)
-          status = res.status
-          console.log(msg) 
-          setPrices(res.data)
-      }).catch((err) => {
-          let msg = `{ ERROR:, ${err} }`
+        let data = res.data;
+        if (data.tokenOneStatus === 200 && data.tokenTwoStatus == 200) { 
+            setPrices(data)
+          }
+          else {
+            alert(`{ ERROR:\n, ${JSON.stringify(data, null, 2)} }`)
+          }
+        }).catch((err) => {
+          let msg = `{ ERROR: ${JSON.stringify(err, null, 2)} }`
           alert(msg)
           console.log(msg);
           throw err
       })
-
-      // alert(JSON.log(res.data.tx, null, 2))
-      // alert(res.data, null, 2)
-      // let data = {
-      //   "tokenOne": 1.003902687388057,
-      //   "tokenTwo": 10.880057462749933,
-      //   "ratio": 0.09226998026665943
-      // }
-      // alert(JSON.stringify(data));
-
-      // let jsonOBJ = `fetchPrices(${one}, ${two}), ${JSON.stringify(res,null,2)}`
-      // alert(jsonOBJ);
-      // console.log(jsonOBJ);
-      // alert(status)
-      // setPrices(data)
   }
 
   async function fetchDexSwap(){
