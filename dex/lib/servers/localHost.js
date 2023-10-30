@@ -3,7 +3,7 @@ const app = express();
 const cors = require("cors");
 require("dotenv").config();
 const port = 3001;
-const { MoralisAPIs } = require('../dex/lib/servers/moralis');
+const { MoralisAPIs } = require('./moralis');
 const moralisAPIs = new MoralisAPIs();
 
 app.use(cors());
@@ -20,7 +20,9 @@ app.get("/tokenPrice", async (req, res) => {
 });
 
 startLocalHostMoralisServer = async(port) => {
-  await moralisAPIs.start(process.env.MORALIS_KEY);
+  let moralisKey = process.env.MORALIS_KEY
+  // console.log("moralisKey:", moralisKey)
+  await moralisAPIs.start(moralisKey);
 
   app.listen(port, () => {
     console.log(`Listening for API Calls`);

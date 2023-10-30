@@ -5,8 +5,6 @@ const cors = require("cors");
 require("dotenv").config();
 const port = 3001;
 
-import { getMoralisQuote } from "./moralisAPIS";
-
 app.use(cors());
 app.use(express.json());
 
