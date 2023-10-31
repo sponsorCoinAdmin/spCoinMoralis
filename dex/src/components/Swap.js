@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from "react";
 import { Input, Popover, Radio, Modal, message } from "antd";
 import {
@@ -10,9 +11,15 @@ import tokenPolyList from "../tokenPolyList.json";
 import axios from "axios";
 import { useSendTransaction, useWaitForTransaction } from "wagmi";
 
+// const { Moralis, MoralisAPIs } = require('../lib/moralis');
+
+// const moralisAPIs = new MoralisAPIs();
+// const moralisKey = process.env.REACT_APP_MORALIS_KEY
+
 
 function Swap(props) {
   let tokenList = tokenEthList;
+  // alert("moralisKey: " + moralisKey)
   // let { tokenList, setTokenList } = useState(tokenEthList);
   // let { address, isConnected } = props;
   // alert(JSON.stringify(tokenList,null,2))
@@ -46,6 +53,7 @@ function Swap(props) {
   })
 
   function changeNetwork(e) {
+    // ToDo Complete this
     // setTokenList(e.target.value);
   }
 
@@ -95,7 +103,14 @@ function Swap(props) {
 
   async function fetchPrices(one, two){
 
-    let status
+    // alert("moralisKey: "+ moralisKey);
+
+    // await moralisAPIs.start(moralisKey);
+    
+    // let priceRatio = await moralisAPIs.getPriceRatios(one, two);
+    // let jsonRatio = JSON.stringify(priceRatio, null, 2)
+    // console.log(jsonRatio);
+
     await axios.get(`http://localhost:3001/tokenPrice`, {
         params: {addressOne: one, addressTwo: two}
       }).then((res) => {
@@ -139,24 +154,18 @@ function Swap(props) {
   
   }
 
-
   useEffect(()=>{
-
     fetchPrices(tokenList[0].address, tokenList[1].address)
-
   }, [])
 
   useEffect(()=>{
-
       if(txDetails.to && isConnected){
         sendTransaction();
       }
   }, [txDetails])
 
   useEffect(()=>{
-
     messageApi.destroy();
-
     if(isLoading){
       messageApi.open({
         type: 'loading',
@@ -164,7 +173,6 @@ function Swap(props) {
         duration: 0,
       })
     }    
-
   },[isLoading])
 
   useEffect(()=>{
