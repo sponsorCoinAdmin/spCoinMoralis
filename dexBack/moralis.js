@@ -1,3 +1,5 @@
+// const Moralis = require("moralis").default;
+
 const Moralis = require("moralis").default;
 
 class MoralisAPIs {
@@ -24,15 +26,15 @@ class MoralisAPIs {
   
     let quoteRec = await this.getMoralisQuote(tokenAddr1);
     // console.log("quoteRec: " + JSON.stringify(quoteRec, null, 2))
-    quoteRec.status == 200 ? usdPrices.tokenOne = quoteRec.token :  usdPrices.tokenOneErrMsg = quoteRec.errMsg
+    quoteRec.status === 200 ? usdPrices.tokenOne = quoteRec.token :  usdPrices.tokenOneErrMsg = quoteRec.errMsg
     usdPrices.tokenOneStatus = quoteRec.status
   
     quoteRec = await this.getMoralisQuote(tokenAddr2);
     // console.log("quoteRec: " + JSON.stringify(quoteRec, null, 2))
-    quoteRec.status == 200 ? usdPrices.tokenTwo = quoteRec.token :  usdPrices.tokenTwoErrMsg = quoteRec.errMsg
+    quoteRec.status === 200 ? usdPrices.tokenTwo = quoteRec.token :  usdPrices.tokenTwoErrMsg = quoteRec.errMsg
     usdPrices.tokenTwoStatus = quoteRec.status
   
-    if (usdPrices.tokenOneStatus === 200 && usdPrices.tokenTwoStatus == 200)
+    if (usdPrices.tokenOneStatus === 200 && usdPrices.tokenTwoStatus === 200)
         usdPrices.ratio = usdPrices.tokenOne/usdPrices.tokenTwo
     // console.log("usdPrices: " + JSON.stringify(usdPrices, null, 2))
 
